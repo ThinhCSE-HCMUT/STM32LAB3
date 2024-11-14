@@ -1,0 +1,187 @@
+/*
+ * fsm_normal_mode.c
+ *
+ *  Created on: Oct 30, 2024
+ *      Author: Admin
+ */
+
+#include "fsm_normal_mode.h"
+
+void fsm_normal_mode()
+{
+	switch(statusHorizontal)
+	{
+	case INIT:
+		setTimer7SEG(50);
+		setTimerBlinky(-1); //not use in this mode
+		setTimerClock(100);
+
+		validateDuration();
+		turnOffLEDAll();
+		statusHorizontal = NORMAL_RED;
+		setTimerHorizontal(ledDurationBuffer[0]*100);
+		index_7SEG = 0;
+		index_display7seg = 0;
+
+		updateBuffer();
+
+		for(int i = 0; i < 4; i++)
+		{
+			led7SEGInit[i] = led7SEGBuffer[i];
+		}
+		break;
+	case NORMAL_RED:
+		displayLED(RED, HORIZONTAL);
+		runClock();
+
+//		if(timer_7seg_flag && index_7SEG <= 1 && index_display7seg <= 1)
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+
+		if(timer_horizontal_flag)
+		{
+			statusHorizontal = NORMAL_GREEN;
+			setTimerHorizontal(ledDurationBuffer[1]*100);
+		}
+		if(is_button_pressed(0))
+		{
+//			HAL_GPIO_TogglePin(LED_TEST_GPIO_Port, LED_TEST_Pin);
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	case NORMAL_GREEN:
+		displayLED(GREEN, HORIZONTAL);
+		runClock();
+
+//		if(timer_7seg_flag && (index_7SEG >= 2) && (index_display7seg >= 2))
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+
+		if(timer_horizontal_flag)
+		{
+			statusHorizontal = NORMAL_YELLOW;
+			setTimerHorizontal(ledDurationBuffer[2]*100);
+		}
+		if(is_button_pressed(0))
+		{
+			is_button_pressed(0);
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	case NORMAL_YELLOW:
+		displayLED(YELLOW, HORIZONTAL);
+		runClock();
+
+//		if(timer_7seg_flag && (index_7SEG >= 4) && (index_display7seg >= 2))
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+		if(timer_horizontal_flag)
+		{
+			statusHorizontal = NORMAL_RED;
+			setTimerHorizontal(ledDurationBuffer[0]*100);
+		}
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	default:
+		break;
+	}
+	switch(statusVertical)
+	{
+	case INIT:
+		validateDuration();
+		turnOffLEDAll();
+		statusVertical = NORMAL_GREEN;
+		setTimerVertical(ledDurationBuffer[1]*100);
+		break;
+	case NORMAL_RED:
+		displayLED(RED, VERTICAL);
+		runClock();
+
+//		if(timer_7seg_flag && index_7SEG <= 1 && index_display7seg <= 1)
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+
+		if(timer_vertical_flag)
+		{
+			statusVertical = NORMAL_GREEN;
+			setTimerVertical(ledDurationBuffer[1]*100);
+		}
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	case NORMAL_GREEN:
+		displayLED(GREEN, VERTICAL);
+		runClock();
+
+//		if(timer_7seg_flag && (index_7SEG >= 2) && (index_display7seg >= 2))
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+
+		if(timer_vertical_flag)
+		{
+			statusVertical = NORMAL_YELLOW;
+			setTimerVertical(ledDurationBuffer[2]*100);
+		}
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	case NORMAL_YELLOW:
+		displayLED(YELLOW, VERTICAL);
+		runClock();
+//		if(timer_7seg_flag && (index_7SEG >= 4) && (index_display7seg >= 2))
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+
+		if(timer_vertical_flag)
+		{
+			statusVertical = NORMAL_RED;
+			setTimerVertical(ledDurationBuffer[0]*100);
+		}
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	default:
+		break;
+	}
+
+	if(timer_7seg_flag)
+	{
+	    setTimer7SEG(50);
+	    display7SEG(4);
+	    enable7SEGat(index_display7seg);
+	    index_display7seg = (index_display7seg + 1) % 4;
+	}
+}

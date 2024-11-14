@@ -1,0 +1,226 @@
+/*
+ * fsm_normal_mode.c
+ *
+ *  Created on: Oct 30, 2024
+ *      Author: Admin
+ */
+
+#include "fsm_normal_mode.h"
+
+void fsm_normal_mode()
+{
+	if(timer_7seg_flag)
+	{
+	    setTimer7SEG(10);
+
+	    // Check which lane the display is currently in and show the appropriate duration.
+	    if(index_display7seg < 2)  // EN0 and EN1 for horizontal lane
+	    {
+	        enable7SEGat(index_display7seg);  // Enable the current display segment (EN0 or EN1)
+
+	        if(statusHorizontal == NORMAL_RED)
+	        {
+	            display7SEG(led7SEGBuffer[index_display7seg]);  // Display red duration (index 0 and 1)
+	            index_7SEG = (index_display7seg == 0) ? 1 : 0;  // Alternate between index 0 and 1
+	        }
+	        else if(statusHorizontal == NORMAL_GREEN)
+	        {
+	            display7SEG(led7SEGBuffer[index_display7seg + 2]);  // Display green duration (index 2 and 3)
+	            index_7SEG = (index_display7seg == 0) ? 3 : 2;  // Alternate between index 2 and 3
+	        }
+	        else if(statusHorizontal == NORMAL_YELLOW)
+	        {
+	            display7SEG(led7SEGBuffer[index_display7seg + 4]);  // Display yellow duration (index 4 and 5)
+	            index_7SEG = (index_display7seg == 0) ? 5 : 4;  // Alternate between index 4 and 5
+	        }
+	    }
+	    else  // EN2 and EN3 for vertical lane
+	    {
+	        enable7SEGat(index_display7seg);  // Enable the current display segment (EN2 or EN3)
+
+	        if(statusVertical == NORMAL_RED)
+	        {
+	            display7SEG(led7SEGBuffer[index_display7seg - 2]);  // Display red duration (index 0 and 1)
+	            index_7SEG = (index_display7seg == 2) ? 1 : 0;  // Alternate between index 0 and 1
+	        }
+	        else if(statusVertical == NORMAL_GREEN)
+	        {
+	            display7SEG(led7SEGBuffer[index_display7seg]);  // Display green duration (index 2 and 3)
+	            index_7SEG = (index_display7seg == 2) ? 3 : 2;  // Alternate between index 2 and 3
+	        }
+	        else if(statusVertical == NORMAL_YELLOW)
+	        {
+	            display7SEG(led7SEGBuffer[index_display7seg + 2]);  // Display yellow duration (index 4 and 5)
+	            index_7SEG = (index_display7seg == 2) ? 5 : 4;  // Alternate between index 4 and 5
+	        }
+	    }
+
+	    // Cycle to the next display segment (EN0 -> EN1 -> EN2 -> EN3)
+	    index_display7seg = (index_display7seg + 1) % 4;
+	}
+
+	switch(statusHorizontal)
+	{
+	case INIT:
+		setTimer7SEG(10);
+		setTimerBlinky(-1); //not use in this mode
+		setTimerClock(100);
+
+		validateDuration();
+		turnOffLEDAll();
+		statusHorizontal = NORMAL_RED;
+		setTimerHorizontal(ledDurationBuffer[0]*100);
+		index_7SEG = 0;
+		index_display7seg = 0;
+		for(int i = 0; i < 6; i++)
+		{
+			led7SEGInit[i] = led7SEGBuffer[i];
+		}
+		break;
+	case NORMAL_RED:
+		displayLED(RED, HORIZONTAL);
+		updateClock();
+
+//		if(timer_7seg_flag && index_7SEG <= 1 && index_display7seg <= 1)
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+
+		if(timer_horizontal_flag)
+		{
+			statusHorizontal = NORMAL_GREEN;
+			setTimerHorizontal(ledDurationBuffer[1]*100);
+		}
+		if(is_button_pressed(0))
+		{
+//			HAL_GPIO_TogglePin(LED_TEST_GPIO_Port, LED_TEST_Pin);
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	case NORMAL_GREEN:
+		displayLED(GREEN, HORIZONTAL);
+		updateClock();
+
+//		if(timer_7seg_flag && (index_7SEG >= 2) && (index_display7seg >= 2))
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+
+		if(timer_horizontal_flag)
+		{
+			statusHorizontal = NORMAL_YELLOW;
+			setTimerHorizontal(ledDurationBuffer[2]*100);
+		}
+		if(is_button_pressed(0))
+		{
+			is_button_pressed(0);
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	case NORMAL_YELLOW:
+		displayLED(YELLOW, HORIZONTAL);
+
+//		if(timer_7seg_flag && (index_7SEG >= 4) && (index_display7seg >= 2))
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+		if(timer_horizontal_flag)
+		{
+			statusHorizontal = NORMAL_RED;
+			setTimerHorizontal(ledDurationBuffer[0]*100);
+		}
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	default:
+		break;
+	}
+	switch(statusVertical)
+	{
+	case INIT:
+		validateDuration();
+		turnOffLEDAll();
+		statusVertical = NORMAL_GREEN;
+		setTimerVertical(ledDurationBuffer[1]*100);
+		break;
+	case NORMAL_RED:
+		displayLED(RED, VERTICAL);
+		updateClock();
+
+//		if(timer_7seg_flag && index_7SEG <= 1 && index_display7seg <= 1)
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+
+		if(timer_vertical_flag)
+		{
+			statusVertical = NORMAL_GREEN;
+			setTimerVertical(ledDurationBuffer[1]*100);
+		}
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	case NORMAL_GREEN:
+		displayLED(GREEN, VERTICAL);
+		updateClock();
+
+//		if(timer_7seg_flag && (index_7SEG >= 2) && (index_display7seg >= 2))
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+
+		if(timer_vertical_flag)
+		{
+			statusVertical = NORMAL_YELLOW;
+			setTimerVertical(ledDurationBuffer[2]*100);
+		}
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	case NORMAL_YELLOW:
+		displayLED(YELLOW, VERTICAL);
+		updateClock();
+//		if(timer_7seg_flag && (index_7SEG >= 4) && (index_display7seg >= 2))
+//		{
+//			setTimer7SEG(50);
+//			display7SEG(led7SEGBuffer[index_7SEG]);
+//			enable7SEGat(index_display7seg);
+//		}
+
+		if(timer_vertical_flag)
+		{
+			statusVertical = NORMAL_RED;
+			setTimerVertical(ledDurationBuffer[0]*100);
+		}
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+			statusVertical = DISABLE;
+		}
+		break;
+	default:
+		break;
+	}
+
+}

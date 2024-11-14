@@ -1,1 +1,7 @@
 timer.c:10:6:HAL_TIM_PeriodElapsedCallback	16	static
+timer.c:33:6:setTimerVertical	16	static
+timer.c:38:6:setTimerHorizontal	16	static
+timer.c:43:6:setTimer7SEG	16	static
+timer.c:49:6:setTimerBlinky	16	static
+timer.c:55:6:setTimerClock	16	static
+timer.c:62:6:timerRun	4	static

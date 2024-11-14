@@ -5,8 +5,12 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Core/Src/input_processing.c \
+../Core/Src/fsm_manual.c \
+../Core/Src/fsm_normal_mode.c \
+../Core/Src/fsm_setting.c \
+../Core/Src/global.c \
 ../Core/Src/input_reading.c \
+../Core/Src/led_7segment.c \
 ../Core/Src/led_display.c \
 ../Core/Src/main.c \
 ../Core/Src/stm32f1xx_hal_msp.c \
@@ -17,8 +21,12 @@ C_SRCS += \
 ../Core/Src/timer.c 
 
 OBJS += \
-./Core/Src/input_processing.o \
+./Core/Src/fsm_manual.o \
+./Core/Src/fsm_normal_mode.o \
+./Core/Src/fsm_setting.o \
+./Core/Src/global.o \
 ./Core/Src/input_reading.o \
+./Core/Src/led_7segment.o \
 ./Core/Src/led_display.o \
 ./Core/Src/main.o \
 ./Core/Src/stm32f1xx_hal_msp.o \
@@ -29,8 +37,12 @@ OBJS += \
 ./Core/Src/timer.o 
 
 C_DEPS += \
-./Core/Src/input_processing.d \
+./Core/Src/fsm_manual.d \
+./Core/Src/fsm_normal_mode.d \
+./Core/Src/fsm_setting.d \
+./Core/Src/global.d \
 ./Core/Src/input_reading.d \
+./Core/Src/led_7segment.d \
 ./Core/Src/led_display.d \
 ./Core/Src/main.d \
 ./Core/Src/stm32f1xx_hal_msp.d \

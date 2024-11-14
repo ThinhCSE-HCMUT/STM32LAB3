@@ -1,0 +1,169 @@
+/*
+ * fsm_setting.c
+ *
+ *  Created on: Nov 5, 2024
+ *      Author: Admin
+ */
+
+#include "fsm_setting.h"
+
+//temp duration
+int red_duration = 0;
+int green_duration = 0;
+int yellow_duration = 0;
+
+void fsm_setting(void)
+{
+	switch(statusHorizontal)
+	{
+	case RED_MODIFY:
+		setTimerBlinky(100);
+//		blinkyLED1s(RED);
+		if(timer_blinky_led_flag)
+		{
+			setTimerBlinky(100);
+			HAL_GPIO_TogglePin(RED_HOZ_GPIO_Port, RED_HOZ_Pin);
+			HAL_GPIO_TogglePin(RED_VER_GPIO_Port, RED_VER_Pin);
+		}
+		HAL_GPIO_TogglePin(RED_HOZ_GPIO_Port, RED_HOZ_Pin);
+		HAL_GPIO_TogglePin(RED_VER_GPIO_Port, RED_VER_Pin);
+		HAL_Delay(1000);
+//		if(is_button_pressed(0))
+//		{
+//			statusHorizontal = GREEN_MODIFY;
+//		}
+//		if(is_button_pressed(1))
+//		{
+//			statusHorizontal = RED_CHANGE_DURATION;
+//		}
+		break;
+	case RED_CHANGE_DURATION:
+		blinkyLED1s(RED);
+		//display7SEG(red_duration, HORIZONTAL);
+		if(is_button_pressed(1))
+		{
+			set7SEGBuffer(red_duration++, 1);
+			if(timer_7seg_flag)
+			{
+				setTimer7SEG(100);
+				update7SEGBuffer(index_7SEG);
+				index_7SEG = (index_7SEG + 1) % MAX_LED_7SEG;
+			}
+		}
+		if(is_button_pressed(2))
+		{
+			statusHorizontal = RED_SET_DURATION;
+		}
+		break;
+	case RED_SET_DURATION:
+		//blinky red led
+		//TODO
+		if(red_duration != 0)
+		{
+			setDurationBuffer(0, red_duration);
+			red_duration = 0;
+		}
+
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = RED_MODIFY;
+		}
+		if(is_button_pressed(1))
+		{
+			statusHorizontal = RED_CHANGE_DURATION;
+		}
+		break;
+
+	case GREEN_MODIFY:
+		//Blinky red led
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = YELLOW_MODIFY;
+		}
+		if(is_button_pressed(1))
+		{
+			statusHorizontal = GREEN_CHANGE_DURATION;
+		}
+		break;
+	case GREEN_CHANGE_DURATION:
+		//Blinky red led
+		if(is_button_pressed(1))
+		{
+			set7SEGBuffer(green_duration++, 1);
+			if(timer_7seg_flag)
+			{
+				setTimer7SEG(100);
+				update7SEGBuffer(index_7SEG);
+				index_7SEG = (index_7SEG + 1) % MAX_LED_7SEG;
+			}
+		}
+		if(is_button_pressed(2))
+		{
+			statusHorizontal = GREEN_SET_DURATION;
+		}
+		break;
+	case GREEN_SET_DURATION:
+		//blinky red led
+		if(green_duration != 0)
+		{
+			setDurationBuffer(1, green_duration);
+			green_duration = 0;
+		}
+
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = GREEN_MODIFY;
+		}
+		if(is_button_pressed(1))
+		{
+			statusHorizontal = GREEN_CHANGE_DURATION;
+		}
+		break;
+
+	case YELLOW_MODIFY:
+		//Blinky red led
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = INIT;
+			statusVertical = INIT;
+		}
+		if(is_button_pressed(1))
+		{
+			statusHorizontal = YELLOW_CHANGE_DURATION;
+		}
+		break;
+	case YELLOW_CHANGE_DURATION:
+		//Blinky red led
+		if(is_button_pressed(1))
+		{
+			set7SEGBuffer(red_duration++, 1);
+			if(timer_7seg_flag)
+			{
+				setTimer7SEG(100);
+				update7SEGBuffer(index_7SEG);
+				index_7SEG = (index_7SEG + 1) % MAX_LED_7SEG;
+			}
+		}
+		if(is_button_pressed(2))
+		{
+			statusHorizontal = YELLOW_SET_DURATION;
+		}
+		break;
+	case YELLOW_SET_DURATION:
+		//blinky red led
+		if(yellow_duration != 0)
+		{
+			setDurationBuffer(2, yellow_duration);
+			yellow_duration = 0;
+		}
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = YELLOW_MODIFY;
+		}
+		if(is_button_pressed(1))
+		{
+			statusHorizontal = YELLOW_CHANGE_DURATION;
+		}
+		break;
+	}
+}

@@ -29,9 +29,15 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "fsm_manual.h"
+#include "timer.h"
+#include "led_display.h"
+#include "global.h"
+#include "fsm_setting.h"
+#include "fsm_normal_mode.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -57,22 +63,52 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define a_Pin GPIO_PIN_0
-#define a_GPIO_Port GPIOA
-#define b_Pin GPIO_PIN_1
-#define b_GPIO_Port GPIOA
-#define c_Pin GPIO_PIN_2
-#define c_GPIO_Port GPIOA
-#define d_Pin GPIO_PIN_3
-#define d_GPIO_Port GPIOA
-#define e_Pin GPIO_PIN_4
-#define e_GPIO_Port GPIOA
-#define f_Pin GPIO_PIN_5
-#define f_GPIO_Port GPIOA
-#define g_Pin GPIO_PIN_6
-#define g_GPIO_Port GPIOA
-#define Button1_Pin GPIO_PIN_0
-#define Button1_GPIO_Port GPIOB
+#define Button1_Pin GPIO_PIN_13
+#define Button1_GPIO_Port GPIOC
+#define Button2_Pin GPIO_PIN_14
+#define Button2_GPIO_Port GPIOC
+#define Button3_Pin GPIO_PIN_15
+#define Button3_GPIO_Port GPIOC
+#define LED_TEST_Pin GPIO_PIN_1
+#define LED_TEST_GPIO_Port GPIOA
+#define SEG0_Pin GPIO_PIN_2
+#define SEG0_GPIO_Port GPIOA
+#define SEG1_Pin GPIO_PIN_3
+#define SEG1_GPIO_Port GPIOA
+#define SEG2_Pin GPIO_PIN_4
+#define SEG2_GPIO_Port GPIOA
+#define SEG3_Pin GPIO_PIN_5
+#define SEG3_GPIO_Port GPIOA
+#define SEG4_Pin GPIO_PIN_6
+#define SEG4_GPIO_Port GPIOA
+#define SEG5_Pin GPIO_PIN_7
+#define SEG5_GPIO_Port GPIOA
+#define GREEN_VER_Pin GPIO_PIN_0
+#define GREEN_VER_GPIO_Port GPIOB
+#define YELLOW_VER_Pin GPIO_PIN_1
+#define YELLOW_VER_GPIO_Port GPIOB
+#define RED_VER_Pin GPIO_PIN_2
+#define RED_VER_GPIO_Port GPIOB
+#define SEG6_Pin GPIO_PIN_8
+#define SEG6_GPIO_Port GPIOA
+#define SEG5_VER_Pin GPIO_PIN_14
+#define SEG5_VER_GPIO_Port GPIOA
+#define SEG6_VER_Pin GPIO_PIN_15
+#define SEG6_VER_GPIO_Port GPIOA
+#define RED_HOZ_Pin GPIO_PIN_3
+#define RED_HOZ_GPIO_Port GPIOB
+#define YELLOW_HOZ_Pin GPIO_PIN_4
+#define YELLOW_HOZ_GPIO_Port GPIOB
+#define GREEN_HOZ_Pin GPIO_PIN_5
+#define GREEN_HOZ_GPIO_Port GPIOB
+#define EN0_Pin GPIO_PIN_6
+#define EN0_GPIO_Port GPIOB
+#define EN1_Pin GPIO_PIN_7
+#define EN1_GPIO_Port GPIOB
+#define EN2_Pin GPIO_PIN_8
+#define EN2_GPIO_Port GPIOB
+#define EN3_Pin GPIO_PIN_9
+#define EN3_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

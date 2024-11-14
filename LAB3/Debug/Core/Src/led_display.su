@@ -1,0 +1,6 @@
+led_display.c:11:6:displayLED	16	static
+led_display.c:63:6:setDurationBuffer	16	static
+led_display.c:68:6:validateDuration	4	static
+led_display.c:77:6:blinkyLED1s	16	static
+led_display.c:110:6:turnOffLEDAllin	16	static
+led_display.c:128:6:turnOffLEDAll	8	static

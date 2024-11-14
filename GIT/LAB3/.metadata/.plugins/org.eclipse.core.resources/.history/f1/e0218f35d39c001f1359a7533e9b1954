@@ -1,0 +1,15 @@
+/*
+ * global.c
+ *
+ *  Created on: Oct 29, 2024
+ *      Author: Admin
+ */
+
+#include "global.h"
+
+int statusHorizontal = INIT;
+int statusVertical = INIT;
+int ledDurationBuffer[3] = {4, 3, 1}; //red green yellow
+int led7SEGBuffer[4] = {0, 8, 0, 6};
+int index_7SEG = 0;
+GPIO_PinState buttonBuffer[N0_OF_BUTTONS] = {SET};

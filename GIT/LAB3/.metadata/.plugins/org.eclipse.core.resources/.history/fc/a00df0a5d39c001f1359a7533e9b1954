@@ -1,0 +1,87 @@
+/*
+ * input_processing.c
+ *
+ *  Created on: Oct 23, 2024
+ *      Author: Admin
+ */
+
+#include "fsm_manual.h"
+//
+//enum ButtonState{
+//	BUTTON_RELEASE,
+//	BUTTON_PRESSED,
+//	BUTTON_PRESSED_MORE_THAN_1_SECOND
+//};
+//enum ButtonState buttonState[N0_OF_BUTTONS] = {BUTTON_RELEASE};
+//
+//void fsm_manual(void)
+//{
+//	for(uint8_t button_id = 0; button_id < N0_OF_BUTTONS; button_id++)
+//	{
+//		switch(buttonState[button_id])
+//		{
+//			case BUTTON_RELEASE:
+//				if(is_button_pressed(buttonState[button_id]))
+//				{
+//					buttonState[button_id] = BUTTON_RELEASE;
+//					//INCREASE VALUE OF PORT A BY ONE UNIT
+//				}
+//				break;
+//			case BUTTON_PRESSED:
+//				if(!is_button_pressed(buttonState[button_id]))
+//				{
+//					buttonState[button_id] = BUTTON_RELEASE;
+//				}
+//				else
+//				{
+//					if(is_button_pressed_1s(buttonState[button_id]))
+//					{
+//						buttonState[button_id] = BUTTON_PRESSED_MORE_THAN_1_SECOND;
+//					}
+//				}
+//				break;
+//			case BUTTON_PRESSED_MORE_THAN_1_SECOND:
+//				if(!is_button_pressed(buttonState[button_id]))
+//				{
+//					buttonState[button_id] = BUTTON_RELEASE;
+//				}
+//				//TODO
+//				break;
+//		}
+//	}
+//
+//}
+void fsm_manual(void)
+{
+	switch(statusHorizontal)
+	{
+	case MAN_RED_IN_HORIZONTAL:
+		displayLED(RED, HORIZONTAL);
+		displayLED(GREEN, VERTICAL);
+		if(is_button_pressed(2))
+		{
+			statusHorizontal = MAN_GREEN_IN_HORIZONTAL;
+		}
+//		HAL_Delay(1000);
+		if(is_button_pressed(0))
+		{
+			HAL_GPIO_TogglePin(LED_TEST_GPIO_Port, LED_TEST_Pin);
+			statusHorizontal = RED_MODIFY;
+		}
+		break;
+	case MAN_GREEN_IN_HORIZONTAL:
+		displayLED(GREEN, HORIZONTAL);
+		displayLED(RED, VERTICAL);
+		if(is_button_pressed(1))
+		{
+			statusHorizontal = MAN_RED_IN_HORIZONTAL;
+		}
+		if(is_button_pressed(0))
+		{
+			statusHorizontal = RED_MODIFY;
+		}
+		break;
+	default:
+		break;
+	}
+}

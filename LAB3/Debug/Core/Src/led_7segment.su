@@ -1,0 +1,7 @@
+led_7segment.c:9:6:display7SEG	16	static
+led_7segment.c:109:6:turnOffAll7SEG	8	static
+led_7segment.c:125:6:set7SEGBuffer_setting	16	static
+led_7segment.c:139:6:enable7SEGat	16	static
+led_7segment.c:164:6:runClock	8	static
+led_7segment.c:199:6:updateBuffer	4	static
+led_7segment.c:224:6:init7SEGBuffer_setting	16	static

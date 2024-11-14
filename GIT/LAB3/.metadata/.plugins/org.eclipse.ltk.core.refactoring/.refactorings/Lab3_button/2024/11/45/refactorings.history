@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;Lab3_button/Core/Inc/fsm_modify_time.h&apos; to &apos;fsm_manual.h&apos;" description="Rename resource &apos;fsm_modify_time.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Inc/fsm_modify_time.h" name="fsm_manual.h" stamp="1730799716903" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;Lab3_button/Core/Src/fsm_modify_time.c&apos; to &apos;fsm_manual.c&apos;" description="Rename resource &apos;fsm_modify_time.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Core/Src/fsm_modify_time.c" name="fsm_manual.c" stamp="1730799726593" updateReferences="true"/>
+</session>
